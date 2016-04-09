@@ -7,7 +7,7 @@ public class Constants {
     public static final String SSH_USERNAME = "root";
     public static final String SSH_PASSWORD = "123456";
     public final static int SSH_PORT        = 22;
-    public static final String EMPTY_STRING = "";
+    public final static String EMPTY_STRING = "";
     public final static String COMMAND_TOP = "top -b -n 1 | head -5";
     public final static String COMMAND_DF_LH = "df -lh";
     public final static String LOAD_AVERAGE_STRING = "load average: ";
@@ -20,5 +20,8 @@ public class Constants {
     public final static String COMMAND_WCHS = "echo wchs | nc {0} {1}";
     public final static String COMMAND_WCHC = "echo wchc | nc {0} {1}";
     public final static String COMMAND_RWPS = "echo rwps | nc {0} {1}";
+
+    /*****************  符号  **********************/
+    public final static String COMMA = ",";
 
 }

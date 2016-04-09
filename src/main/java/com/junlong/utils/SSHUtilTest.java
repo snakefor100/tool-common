@@ -8,6 +8,7 @@ import com.junlong.common.domain.exception.BusinessException;
 import com.junlong.common.domain.exception.ResponseCode;
 import com.junlong.common.domain.ssh.HostPerformanceEntity;
 import com.junlong.common.domain.ssh.SSHResource;
+import org.apache.log4j.Logger;
 
 
 import java.io.BufferedReader;
@@ -21,7 +22,9 @@ import java.util.Map;
  * SSH工具类
  * Created by niuniu on 2016/4/4.
  */
-public class SSHUtil {
+public class SSHUtilTest {
+    private static Logger logger = Logger.getLogger(SSHUtilTest.class);
+
     public static HostPerformanceEntity getHostPerformance(String ip, int port, String userName, String password ){
         if(StringUtil.isBlank(ip)){
             throw new BusinessException(ResponseCode.PARAM);
@@ -32,7 +35,7 @@ public class SSHUtil {
         Connection connection = null;
         try {
             connection = new Connection(ip,port);
-            connection.connect(null, 2000, 2000);
+            connection.connect(null, 20000, 20000);
             boolean isAuthticated = connection.authenticateWithPassword(userName, password);
             return getHostPerformance(connection);
         }catch (Exception e){
@@ -172,12 +175,16 @@ public class SSHUtil {
             if ( isAuthenticated == false ) {
                 throw new BusinessException(ResponseCode.SSHAUTH);
             }
-
+            System.out.println(command);
             sshResource.session = sshResource.conn.openSession();
-            sshResource.session.execCommand( "echo stat | nc 192.168.1.170 2181" );
+            sshResource.session.execCommand( "echo rwps | nc 192.168.1.171 2181" );
             System.out.println(sshResource.session.getStdout() );
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new StreamGobbler(sshResource.session.getStdout())));
-            System.out.println(bufferedReader.readLine());
+            String line = "";
+            System.out.println("开始");
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
             sshResource.setReader( new BufferedReader( new InputStreamReader( new StreamGobbler( sshResource.session.getStdout() ) ) ) );
 
             return sshResource;
@@ -191,20 +198,22 @@ public class SSHUtil {
     private static final String MODE_OBSERVER = "Mode: observer";
     private static final String NODE_COUNT = "Node count:";
     public static void main(String[] args) throws IOException {
-        SSHResource root = executeWithoutHandleBufferedReader("192.168.1.170", 22, "root", "123456", StringUtil.replaceSequenced(Constants.COMMAND_STAT, "192.168.1.170", 2181
-                + Constants.COMMAND_STAT));
-        String line = "";
-        BufferedReader bufferedRead = root.reader;
-        while ((line = bufferedRead.readLine()) != null) {
-          if (line.contains(MODE_FOLLOWER)) {
-                System.out.println("F");
-            } else if (line.contains(MODE_LEADERER)) {
-                System.out.println("L");
-            } else if (line.contains(MODE_STANDALONE)) {
-                System.out.println("S");
-            } else if (line.contains(MODE_OBSERVER)) {
-                System.out.println("O");
-            }
-        }
+//        SSHResource root = executeWithoutHandleBufferedReader("192.168.1.170", 22, "root", "123456", StringUtil.replaceSequenced(Constants.COMMAND_STAT, "192.168.1.170", 2181
+//                + Constants.COMMAND_STAT));
+//        String line = "";
+//        BufferedReader bufferedRead = root.reader;
+//        while ((line = bufferedRead.readLine()) != null) {
+//          if (line.contains(MODE_FOLLOWER)) {
+//                System.out.println("F");
+//            } else if (line.contains(MODE_LEADERER)) {
+//                System.out.println("L");
+//            } else if (line.contains(MODE_STANDALONE)) {
+//                System.out.println("S");
+//            } else if (line.contains(MODE_OBSERVER)) {
+//                System.out.println("O");
+//            }
+//        }
+        HostPerformanceEntity hostPerformance = getHostPerformance("192.168.1.170", 22, "root", "123456");
+        System.out.println(hostPerformance);
     }
 }

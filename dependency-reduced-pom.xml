@@ -39,8 +39,10 @@
   </build>
   <properties>
     <skipTests>true</skipTests>
+    <slf4j.version>1.6.6</slf4j.version>
     <plugin.maven-surefire>2.18.1</plugin.maven-surefire>
     <plugin.maven-compiler>3.1</plugin.maven-compiler>
+    <log4j.version>1.2.12</log4j.version>
     <project.build.jdk>1.7</project.build.jdk>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
