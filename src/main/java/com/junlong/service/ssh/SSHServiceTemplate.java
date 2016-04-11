@@ -9,7 +9,6 @@ import com.junlong.common.domain.exception.ResponseCode;
 import com.junlong.common.domain.ssh.SSHRequest;
 import com.junlong.utils.StringUtil;
 import com.junlong.utils.ssh.SSHSessionFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -19,43 +18,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by niuniu on 2016/4/8.
+ * Created by niuniu on 2016/4/10.
  */
-@Deprecated
-public class SSHServiceImpl implements SSHService {
-    private static Logger logger = Logger.getLogger(SSHServiceImpl.class);
-    private static final String LOG_SSH_SERVICE = "SSH服务-";
-
+public class SSHServiceTemplate implements SSHSession {
+    private static Logger logger = Logger.getLogger(SSHServiceTemplate.class);
+    private static final String LOG_SSH_SERVICE = "SSH模板-";
     private SSHRequest sshRequest;
 
-    public SSHServiceImpl(SSHRequest sshRequest) {
+    public SSHServiceTemplate(SSHRequest sshRequest) {
         this.sshRequest = sshRequest;
     }
 
+
     @Override
-    public List<String> execute(String commond) {
-        logger.info(LOG_SSH_SERVICE+"开始执行命令:"+commond);
+    public void execute(String commond, SSHExecuteCallBack callBack) {
+        logger.info(LOG_SSH_SERVICE + "开始执行命令:" + commond);
         Connection connection = SSHSessionFactory.create(sshRequest.getIp(), sshRequest.getPort(), sshRequest.getUserName(), sshRequest.getPassWord());
-        List<String> result = null;
         try {
             Session session = connection.openSession();
-            session.execCommand(Constants.COMMAND_TOP);
+            session.execCommand(commond);
             BufferedReader read = new BufferedReader(new InputStreamReader(new StreamGobbler(session.getStdout())));
-            result = new ArrayList<String>();
-            String line = null;
-            while ((line = read.readLine()) != null){
-                if(StringUtils.isEmpty(line)){
-                    continue;
-                }
-                result.add(line);
-            }
+            callBack.processResult(read);
+            session.close();
         } catch (IOException e) {
-            logger.error(LOG_SSH_SERVICE + "执行"+commond+"时发生未知异常,异常信息:" + e.getMessage(), e);
+            logger.error(LOG_SSH_SERVICE + "执行" + commond + "时发生未知异常,异常信息:" + e.getMessage(), e);
             throw new BusinessException(ResponseCode.SYSTEM, e);
-        }finally {
+        } finally {
             SSHSessionFactory.close(connection);
-            logger.info(LOG_SSH_SERVICE+"命令返回结果:"+result);
-            return result;
         }
     }
+
+    @Override
+    public void close() throws IOException {
+        //执行execut时自动关闭，暂时不需要close方法
+        throw new BusinessException(ResponseCode.SYSTEM);
+    }
+
 }
