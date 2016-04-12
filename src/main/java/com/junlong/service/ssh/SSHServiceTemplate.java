@@ -3,19 +3,15 @@ package com.junlong.service.ssh;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
-import com.junlong.common.domain.Constants;
 import com.junlong.common.domain.exception.BusinessException;
 import com.junlong.common.domain.exception.ResponseCode;
 import com.junlong.common.domain.ssh.SSHRequest;
-import com.junlong.utils.StringUtil;
 import com.junlong.utils.ssh.SSHSessionFactory;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by niuniu on 2016/4/10.

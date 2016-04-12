@@ -16,7 +16,7 @@ public class Constants {
     public static final String WORD_SEPARATOR = Character.toString( ( char )2 );
 
 
-    public final static int SSH_TIMEOUT = 3000;
+    public final static int SSH_TIMEOUT = 6000;
     /*****************  符号  **********************/
     public final static String COMMA = ",";
     public final static String COLON = ":";

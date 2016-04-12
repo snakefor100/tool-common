@@ -1,12 +1,10 @@
 package com.junlong.utils.ssh;
 
 import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
 import com.junlong.common.domain.Constants;
 import com.junlong.common.domain.exception.BusinessException;
 import com.junlong.common.domain.exception.ResponseCode;
 import com.junlong.utils.IntegerUtil;
-import com.junlong.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -39,6 +37,9 @@ public class SSHSessionFactory {
             }
 
         } catch (IOException e) {
+            if(e.getMessage().contains("Password authentication failed")){
+                logger.error("测试:"+userName+","+password+","+ip+","+port);
+            }
             logger.error(LOG_SSH_FACTORY + "创建连接时发生未知异常,异常信息:" + e.getMessage(), e);
             throw new BusinessException(ResponseCode.SYSTEM, e);
         }

@@ -7,7 +7,6 @@ import com.junlong.common.domain.Constants;
 import com.junlong.common.domain.exception.BusinessException;
 import com.junlong.common.domain.exception.ResponseCode;
 import com.junlong.common.domain.ssh.SSHRequest;
-import com.junlong.utils.StringUtil;
 import com.junlong.utils.ssh.SSHSessionFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
